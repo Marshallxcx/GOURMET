@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gourmet Express - Panel de Administración & Control de Pedidos</title>
+
+    <!-- Bootstrap 5.3 & Tailwind CSS & FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        body { 
+            background-color: #05070a; 
+            color: #f1f5f9; 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            overflow-x: hidden;
+        }
+        
+        .font-serif-title {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .text-gold { color: #f59e0b; }
+        
+        .bg-luxury-glass { 
+            background: rgba(17, 24, 39, 0.85); 
+            backdrop-filter: blur(16px); 
+            border: 1px solid rgba(245, 158, 11, 0.2); 
+        }
+
+        .btn-gold { 
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); 
+            color: #07090e; 
+            font-weight: 700; 
+            border: none;
+            transition: all 0.3s ease;
+        }
+        .btn-gold:hover { 
+            background: linear-gradient(135deg, #fbbf24 0%, #b45309 100%); 
+            color: #ffffff; 
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.4);
+        }
+
+        .btn-success-custom {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #ffffff;
+            font-weight: 700;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        .btn-success-custom:hover {
+            background: linear-gradient(135deg, #34d399 0%, #047857 100%);
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        .btn-outline-gold {
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            color: #f59e0b;
+            background: rgba(17, 24, 39, 0.6);
+            backdrop-filter: blur(8px);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-outline-gold:hover, .btn-outline-gold.active {
+            background: #f59e0b;
+            color: #07090e;
+            border-color: #f59e0b;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.35);
+        }
+
+        .brand-logo-badge {
+            width: 44px;
+            height: 44px;
+            background: radial-gradient(circle at 30% 30%, #f59e0b, #92400e);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(254, 243, 199, 0.5);
+        }
+
+        .table-dark {
+            --bs-table-bg: transparent;
+            --bs-table-border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .form-control, .form-select {
+            background-color: #0b0f17 !important;
+            border-color: #374151 !important;
+            color: #ffffff !important;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #f59e0b !important;
+            box-shadow: 0 0 0 0.25rem rgba(245, 158, 11, 0.25) !important;
+        }
+    </style>
+</head>
+<body class="pb-16">
+
+    <!-- Header & Navbar Admin -->
+    <nav class="navbar navbar-expand-lg bg-dark/95 navbar-dark sticky-top border-b border-amber-500/20 shadow-2xl px-6 py-3 backdrop-blur-md z-40">
+        <div class="container-fluid flex justify-between items-center">
+            <a class="navbar-brand font-serif-title font-bold text-gold flex items-center gap-3 text-2xl tracking-wide" href="#">
+                <div class="brand-logo-badge">
+                    <i class="fa-solid fa-user-shield text-slate-950 text-lg"></i>
+                </div>
+                <div class="flex flex-col leading-none">
+                    <span class="text-amber-400 font-extrabold tracking-wider text-xl">GOURMET <span class="text-white font-light">ADMIN</span></span>
+                    <span class="text-slate-400 text-[10px] font-sans tracking-[0.2em] font-semibold uppercase">Panel de Control & Vouchers</span>
+                </div>
+            </a>
+
+            <div class="flex items-center gap-3">
+                <button class="btn btn-outline-gold flex items-center gap-2 px-4 py-2 rounded-2xl text-xs shadow-md" onclick="cargarPedidosAdmin()">
+                    <i class="fa-solid fa-rotate text-amber-400"></i> Actualizar Datos
+                </button>
+                <a href="usuario.html" target="_blank" class="btn btn-gold flex items-center gap-2 px-4 py-2 rounded-2xl text-xs shadow-xl">
+                    <i class="fa-solid fa-store"></i> Ir a Vista Cliente <i class="fa-solid fa-external-link-alt text-[10px]"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-6">
+        
+        <!-- Tarjetas KPI / Métricas -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mb-8">
+            <div class="bg-luxury-glass p-5 rounded-3xl border border-amber-500/30 flex items-center justify-between shadow-xl">
+                <div>
+                    <span class="text-slate-400 text-xs font-semibold uppercase tracking-wider block">Total Pedidos</span>
+                    <h3 id="statTotalPedidos" class="text-3xl font-extrabold text-white mt-1">0</h3>
+                </div>
+                <div class="bg-amber-500/20 p-3.5 rounded-2xl text-amber-400 text-xl">
+                    <i class="fa-solid fa-receipt"></i>
+                </div>
+            </div>
+
+            <div class="bg-luxury-glass p-5 rounded-3xl border border-blue-500/30 flex items-center justify-between shadow-xl">
+                <div>
+                    <span class="text-slate-400 text-xs font-semibold uppercase tracking-wider block">Pedidos Recibidos</span>
+                    <h3 id="statPendientes" class="text-3xl font-extrabold text-blue-400 mt-1">0</h3>
+                </div>
+                <div class="bg-blue-500/20 p-3.5 rounded-2xl text-blue-400 text-xl">
+                    <i class="fa-solid fa-bell"></i>
+                </div>
+            </div>
+
+            <div class="bg-luxury-glass p-5 rounded-3xl border border-yellow-500/30 flex items-center justify-between shadow-xl">
+                <div>
+                    <span class="text-slate-400 text-xs font-semibold uppercase tracking-wider block">En Cocina</span>
+                    <h3 id="statCocina" class="text-3xl font-extrabold text-yellow-400 mt-1">0</h3>
+                </div>
+                <div class="bg-yellow-500/20 p-3.5 rounded-2xl text-yellow-400 text-xl">
+                    <i class="fa-solid fa-fire-burner"></i>
+                </div>
+            </div>
+
+            <div class="bg-luxury-glass p-5 rounded-3xl border border-emerald-500/30 flex items-center justify-between shadow-xl">
+                <div>
+                    <span class="text-slate-400 text-xs font-semibold uppercase tracking-wider block">Ventas Totales</span>
+                    <h3 id="statVentasTotal" class="text-3xl font-extrabold text-emerald-400 mt-1">S/ 0.00</h3>
+                </div>
+                <div class="bg-emerald-500/20 p-3.5 rounded-2xl text-emerald-400 text-xl">
+                    <i class="fa-solid fa-sack-dollar"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Barra de Búsqueda y Filtros -->
+        <div class="bg-luxury-glass p-6 rounded-3xl shadow-2xl border border-slate-800 mb-8 space-y-4">
+            <div class="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4">
+                <div class="relative flex-1">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-500 text-sm"></i>
+                    <input type="text" id="searchInput" class="form-control pl-11 rounded-2xl text-sm py-2.5" placeholder="Buscar por código, cliente o tipo de entrega..." oninput="filtrarTabla()">
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button class="btn btn-sm btn-outline-gold active px-4 py-2 rounded-xl text-xs" onclick="filtrarEstado('todos', this)">Todos</button>
+                    <button class="btn btn-sm btn-outline-gold px-4 py-2 rounded-xl text-xs" onclick="filtrarEstado('recibido', this)">Recibidos</button>
+                    <button class="btn btn-sm btn-outline-gold px-4 py-2 rounded-xl text-xs" onclick="filtrarEstado('cocina', this)">Cocina</button>
+                    <button class="btn btn-sm btn-outline-gold px-4 py-2 rounded-xl text-xs" onclick="filtrarEstado('listo', this)">Listos</button>
+                    <button class="btn btn-sm btn-outline-gold px-4 py-2 rounded-xl text-xs text-emerald-400 border-emerald-500/40" onclick="filtrarEstado('entregado', this)">Entregados</button>
+                    <button class="btn btn-sm btn-outline-gold px-4 py-2 rounded-xl text-xs text-rose-400 border-rose-500/40" onclick="filtrarEstado('cancelado', this)">Cancelados</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla Principal de Control de Pedidos -->
+        <div class="bg-luxury-glass rounded-3xl shadow-2xl border border-slate-800 overflow-hidden">
+            <div class="p-5 border-b border-slate-800/80 flex justify-between items-center">
+                <h4 class="font-serif-title text-xl font-bold text-amber-400 m-0 flex items-center gap-2">
+                    <i class="fa-solid fa-clipboard-list text-base"></i> Registro de Pedidos Entrantes
+                </h4>
+                <span class="text-xs text-slate-400">Sincronizado en tiempo real con <code>localStorage</code></span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle text-sm mb-0">
+                    <thead class="bg-slate-950/90 text-amber-400 font-bold text-xs uppercase tracking-wider border-b border-slate-800">
+                        <tr>
+                            <th class="py-4 px-4">Código</th>
+                            <th class="py-4 px-4">Cliente / Detalles Entrega</th>
+                            <th class="py-4 px-4">Método de Pago</th>
+                            <th class="py-4 px-4">Platos Solicitados</th>
+                            <th class="py-4 px-4">Total</th>
+                            <th class="py-4 px-4">Voucher Adjunto</th>
+                            <th class="py-4 px-4">Estado Actual</th>
+                            <th class="py-4 px-4 text-center">Acciones / Cambio de Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaAdminBody" class="divide-y divide-slate-800/60">
+                        <!-- Carga dinámica -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal para Auditoría de Voucher Ampliado -->
+    <div class="modal fade" id="adminVoucherModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-slate-900 text-white border border-amber-500/40 rounded-3xl overflow-hidden shadow-2xl p-5 text-center">
+                <div class="flex justify-between items-center mb-4">
+                    <h6 class="text-amber-400 font-bold m-0 flex items-center gap-2 text-base">
+                        <i class="fa-solid fa-receipt"></i> Auditoría de Comprobante / Voucher
+                    </h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="bg-slate-950 p-2 rounded-2xl border border-slate-800 mb-3">
+                    <img id="adminModalVoucherImg" class="w-full max-h-[70vh] object-contain rounded-xl border border-slate-700 shadow-xl" alt="Voucher de Pago">
+                </div>
+                <div id="adminModalVoucherInfo" class="text-xs text-slate-300 bg-slate-950/80 p-3 rounded-xl border border-slate-800 text-left space-y-1"></div>
+                <div class="mt-4">
+                    <button type="button" class="btn btn-gold w-full rounded-2xl py-2.5 text-xs font-bold" data-bs-dismiss="modal">Cerrar Inspección</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let pedidos = [];
+        let estadoFiltroActual = 'todos';
+
+        function cargarPedidosAdmin() {
+            try {
+                pedidos = JSON.parse(localStorage.getItem('rest_pedidos_cliente')) || [];
+            } catch (e) {
+                pedidos = [];
+            }
+            actualizarMetricas();
+            renderTabla();
+        }
+
+        function guardarPedidosLocal() {
+            try {
+                localStorage.setItem('rest_pedidos_cliente', JSON.stringify(pedidos));
+            } catch (e) {
+                console.error("Error al guardar en localStorage:", e);
+                alert("Atención: El almacenamiento local está lleno.");
+            }
+        }
+
+        function actualizarMetricas() {
+            const total = pedidos.length;
+            const pendientes = pedidos.filter(p => p.estado === 'recibido').length;
+            const cocina = pedidos.filter(p => p.estado === 'cocina').length;
+            const ventasTotal = pedidos.reduce((acc, p) => p.estado !== 'cancelado' ? acc + parseFloat(p.total || 0) : acc, 0);
+
+            document.getElementById('statTotalPedidos').innerText = total;
+            document.getElementById('statPendientes').innerText = pendientes;
+            document.getElementById('statCocina').innerText = cocina;
+            document.getElementById('statVentasTotal').innerText = `S/ ${ventasTotal.toFixed(2)}`;
+        }
+
+        function renderTabla() {
+            const tbody = document.getElementById('tablaAdminBody');
+            tbody.innerHTML = '';
+
+            const busqueda = document.getElementById('searchInput').value.toLowerCase().trim();
+
+            let filtrados = pedidos;
+
+            if(estadoFiltroActual !== 'todos') {
+                filtrados = filtrados.filter(p => p.estado === estadoFiltroActual);
+            }
+
+            if(busqueda !== '') {
+                filtrados = filtrados.filter(p => 
+                    (p.codigo_pedido && p.codigo_pedido.toLowerCase().includes(busqueda)) ||
+                    (p.cliente_nombre && p.cliente_nombre.toLowerCase().includes(busqueda)) ||
+                    (p.tipo_entrega && p.tipo_entrega.toLowerCase().includes(busqueda))
+                );
+            }
+
+            if(filtrados.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center text-slate-500 py-10">
+                            <i class="fa-solid fa-inbox text-3xl mb-2 block text-slate-600"></i>
+                            No hay pedidos registrados o coincidentes.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            filtrados.forEach(o => {
+                let badgeClass = 'bg-slate-700 text-white';
+                if(o.estado === 'recibido') badgeClass = 'bg-blue-500/20 text-blue-400 border border-blue-500/40';
+                else if(o.estado === 'cocina') badgeClass = 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/40';
+                else if(o.estado === 'listo') badgeClass = 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/40';
+                else if(o.estado === 'entregado') badgeClass = 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40';
+                else if(o.estado === 'cancelado') badgeClass = 'bg-rose-500/20 text-rose-400 border border-rose-500/40';
+
+                // Lógica de avance incremental y botón directo de entregado
+                let botonAvance = '';
+                if(o.estado === 'recibido') {
+                    botonAvance = `
+                        <button class="btn btn-sm btn-gold py-1 px-3 rounded-xl text-xs font-bold whitespace-nowrap shadow-md" onclick="cambiarEstadoDirecto('${o.id}', 'cocina')">
+                            A Cocina <i class="fa-solid fa-fire-burner ml-1"></i>
+                        </button>`;
+                } else if(o.estado === 'cocina') {
+                    botonAvance = `
+                        <button class="btn btn-sm btn-info text-dark py-1 px-3 rounded-xl text-xs font-bold whitespace-nowrap shadow-md" onclick="cambiarEstadoDirecto('${o.id}', 'listo')">
+                            Marcar Listo <i class="fa-solid fa-circle-check ml-1"></i>
+                        </button>`;
+                } else if(o.estado === 'listo') {
+                    botonAvance = `
+                        <button class="btn btn-sm btn-success-custom py-1 px-3 rounded-xl text-xs font-bold whitespace-nowrap shadow-md" onclick="cambiarEstadoDirecto('${o.id}', 'entregado')">
+                            <i class="fa-solid fa-box-open mr-1"></i> Marcar Entregado
+                        </button>`;
+                } else if(o.estado === 'entregado') {
+                    botonAvance = `<span class="text-emerald-400 text-xs font-bold"><i class="fa-solid fa-circle-check"></i> Entregado</span>`;
+                }
+
+                let itemsResumen = o.items ? o.items.map(i => `${i.cantidad}x ${i.nombre}`).join(', ') : 'Sin detalle';
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-900/50 transition">
+                        <td class="py-4 px-4 font-extrabold text-amber-400">${o.codigo_pedido}</td>
+                        <td class="py-4 px-4">
+                            <div class="font-bold text-white text-sm">${o.cliente_nombre}</div>
+                            <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold mt-0.5">
+                                <i class="fa-solid fa-truck-ramp-box text-amber-400 mr-1"></i>${o.tipo_entrega} ${o.mesa && o.mesa !== '-' ? '('+o.mesa+')' : ''}
+                            </div>
+                        </td>
+                        <td class="py-4 px-4">
+                            <span class="text-xs font-bold uppercase text-slate-300 block">${o.metodo_pago}</span>
+                            ${o.codigo_operacion && o.codigo_operacion !== 'Sin código' ? `<span class="text-[11px] text-purple-300 font-mono block">Op: ${o.codigo_operacion}</span>` : ''}
+                        </td>
+                        <td class="py-4 px-4 max-w-xs text-xs text-slate-300 truncate" title="${itemsResumen}">
+                            ${itemsResumen}
+                        </td>
+                        <td class="py-4 px-4 font-extrabold text-amber-300 text-base">S/ ${parseFloat(o.total || 0).toFixed(2)}</td>
+                        <td class="py-4 px-4">
+                            ${o.voucher_img ? `
+                                <button class="btn btn-sm btn-outline-warning py-1 px-3 rounded-xl text-xs flex items-center gap-1.5 shadow-sm hover:scale-105 transition" onclick="verVoucherModal('${o.id}')">
+                                    <i class="fa-solid fa-image text-amber-400"></i> Ver Voucher
+                                </button>
+                            ` : '<span class="text-slate-500 text-xs italic">Sin voucher</span>'}
+                        </td>
+                        <td class="py-4 px-4">
+                            <span class="px-3 py-1 rounded-full text-xs font-bold uppercase ${badgeClass}">
+                                ${o.estado}
+                            </span>
+                        </td>
+                        <td class="py-4 px-4 text-center">
+                            <div class="flex items-center justify-center gap-2">
+                                ${botonAvance}
+                                ${o.estado !== 'entregado' && o.estado !== 'cancelado' ? `
+                                    <button class="btn btn-sm btn-outline-success py-1 px-2.5 rounded-xl text-xs" title="Marcar directamente como Entregado" onclick="cambiarEstadoDirecto('${o.id}', 'entregado')">
+                                        <i class="fa-solid fa-check"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger py-1 px-2.5 rounded-xl text-xs" title="Cancelar Pedido" onclick="cancelarPedidoAdmin('${o.id}')">
+                                        <i class="fa-solid fa-ban"></i>
+                                    </button>
+                                ` : ''}
+                                <button class="btn btn-sm btn-outline-secondary py-1 px-2.5 rounded-xl text-xs" title="Eliminar Registro" onclick="eliminarPedidoAdmin('${o.id}')">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function cambiarEstadoDirecto(id, nuevoEstado) {
+            const index = pedidos.findIndex(x => String(x.id) === String(id));
+            if(index > -1) {
+                pedidos[index].estado = nuevoEstado;
+                guardarPedidosLocal();
+                cargarPedidosAdmin();
+            }
+        }
+
+        function cancelarPedidoAdmin(id) {
+            if(confirm('¿Seguro que deseas cancelar este pedido?')) {
+                const index = pedidos.findIndex(x => String(x.id) === String(id));
+                if(index > -1) {
+                    pedidos[index].estado = 'cancelado';
+                    guardarPedidosLocal();
+                    cargarPedidosAdmin();
+                }
+            }
+        }
+
+        function eliminarPedidoAdmin(id) {
+            if(confirm('¿Deseas eliminar permanentemente este registro de pedido?')) {
+                pedidos = pedidos.filter(x => String(x.id) !== String(id));
+                guardarPedidosLocal();
+                cargarPedidosAdmin();
+            }
+        }
+
+        // Corrección de la función para visualizar modal de voucher
+        function verVoucherModal(id) {
+            const o = pedidos.find(x => String(x.id) === String(id));
+            if(o && o.voucher_img) {
+                document.getElementById('adminModalVoucherImg').src = o.voucher_img;
+                document.getElementById('adminModalVoucherInfo').innerHTML = `
+                    <div><span class="text-slate-400">Código de Pedido:</span> <strong class="text-amber-400">${o.codigo_pedido}</strong></div>
+                    <div><span class="text-slate-400">Cliente:</span> <strong class="text-white">${o.cliente_nombre}</strong></div>
+                    <div><span class="text-slate-400">N° de Operación:</span> <strong class="text-purple-300 font-mono">${o.codigo_operacion || 'Sin código'}</strong></div>
+                    <div><span class="text-slate-400">Monto Aprobado:</span> <strong class="text-emerald-400">S/ ${parseFloat(o.total || 0).toFixed(2)}</strong></div>
+                `;
+                new bootstrap.Modal(document.getElementById('adminVoucherModal')).show();
+            } else {
+                alert("No se encontró la imagen del voucher.");
+            }
+        }
+
+        function filtrarEstado(estado, btn) {
+            estadoFiltroActual = estado;
+            document.querySelectorAll('.btn-outline-gold').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderTabla();
+        }
+
+        function filtrarTabla() {
+            renderTabla();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarPedidosAdmin();
+            // Sincronización continua cada 3 segundos
+            setInterval(cargarPedidosAdmin, 3000);
+        });
+    </script>
+</body>
+</html>
